@@ -2,25 +2,40 @@ import { useEffect, useState } from "react";
 
 import { getMarketData } from "../services/marketService";
 import CoinTable from "../components/CoinTable";
+import SearchBar from "../components/SearchBar";
 
 function Markets() {
-  const [coins, setCoins] = useState([]);
+  const [coins, setCoins] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    async function load() {
-      const data = await getMarketData();
-      setCoins(data);
+    async function loadData() {
+      try {
+        const data = await getMarketData();
+        setCoins(data);
+      } catch (error) {
+        console.error("Failed to fetch market data", error);
+      }
     }
 
-    load();
+    loadData();
   }, []);
 
+  const filteredCoins = coins.filter((coin) =>
+    coin.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <>
+    <div>
       <h1>Crypto Markets</h1>
 
-      <CoinTable coins={coins} />
-    </>
+      <SearchBar
+        value={search}
+        onChange={setSearch}
+      />
+
+      <CoinTable coins={filteredCoins} />
+    </div>
   );
 }
 
