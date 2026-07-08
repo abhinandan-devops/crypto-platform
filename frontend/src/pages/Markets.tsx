@@ -14,7 +14,7 @@ function Markets() {
         const data = await getMarketData();
         setCoins(data);
       } catch (error) {
-        console.error("Failed to fetch market data", error);
+        console.error(error);
       }
     }
 
@@ -26,8 +26,10 @@ function Markets() {
   );
 
   return (
-    <div>
-      <h1>Crypto Markets</h1>
+    <div className="max-w-7xl mx-auto">
+      <h1 className="text-4xl font-bold mb-6">
+        📊 Crypto Markets
+      </h1>
 
       <SearchBar
         value={search}

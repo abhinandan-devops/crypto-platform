@@ -13,53 +13,50 @@ type Props = {
 
 function CoinTable({ coins }: Props) {
   return (
-    <table
-      style={{
-        width: "100%",
-        borderCollapse: "collapse",
-        marginTop: "20px",
-      }}
-    >
-      <thead>
-        <tr>
-          <th align="left">Coin</th>
-          <th align="left">Price</th>
-          <th align="left">Market Cap</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {coins.map((coin) => (
-          <tr
-            key={coin.id}
-            style={{
-              borderBottom: "1px solid #333",
-            }}
-          >
-            <td
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                padding: "12px",
-              }}
-            >
-              <img
-                src={coin.image}
-                width="30"
-                alt={coin.name}
-              />
-
-              {coin.name}
-            </td>
-
-            <td>${coin.current_price.toLocaleString()}</td>
-
-            <td>${coin.market_cap.toLocaleString()}</td>
+    <div className="overflow-x-auto rounded-xl border border-slate-700">
+      <table className="w-full bg-slate-800 rounded-xl overflow-hidden">
+        <thead className="bg-slate-700">
+          <tr>
+            <th className="p-4 text-left">Coin</th>
+            <th className="p-4 text-left">Symbol</th>
+            <th className="p-4 text-left">Price</th>
+            <th className="p-4 text-left">Market Cap</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {coins.map((coin) => (
+            <tr
+              key={coin.id}
+              className="border-b border-slate-700 hover:bg-slate-700 transition"
+            >
+              <td className="p-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={coin.image}
+                    alt={coin.name}
+                    className="w-8 h-8"
+                  />
+                  <span className="font-semibold">{coin.name}</span>
+                </div>
+              </td>
+
+              <td className="p-4 uppercase">
+                {coin.symbol}
+              </td>
+
+              <td className="p-4">
+                ${coin.current_price.toLocaleString()}
+              </td>
+
+              <td className="p-4">
+                ${coin.market_cap.toLocaleString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

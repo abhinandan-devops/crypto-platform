@@ -2,34 +2,27 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "15px 30px",
-        background: "#1e293b",
-        color: "white",
-      }}
-    >
-      <h2>🚀 Crypto Platform</h2>
+    <nav className="bg-slate-800 shadow-lg">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-5">
+        <h1 className="text-2xl font-bold text-cyan-400">
+          🚀 Crypto Platform
+        </h1>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-        }}
-      >
-        <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-          Dashboard
-        </Link>
+        <div className="flex gap-8 text-lg">
+          <Link
+            to="/"
+            className="hover:text-cyan-400 transition"
+          >
+            Dashboard
+          </Link>
 
-        <Link
-          to="/markets"
-          style={{ color: "white", textDecoration: "none" }}
-        >
-          Markets
-        </Link>
+          <Link
+            to="/markets"
+            className="hover:text-cyan-400 transition"
+          >
+            Markets
+          </Link>
+        </div>
       </div>
     </nav>
   );
