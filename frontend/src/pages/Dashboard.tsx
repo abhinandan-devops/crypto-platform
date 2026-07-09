@@ -1,5 +1,7 @@
 import TrendingCoins from "../components/TrendingCoins";
 import MarketSummary from "../components/MarketSummary";
+import TopGainers from "../components/TopGainers";
+import TopLosers from "../components/TopLosers";
 
 function Dashboard() {
   return (
@@ -15,15 +17,23 @@ function Dashboard() {
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      {/* First Row */}
+      <div className="grid lg:grid-cols-3 gap-6 mb-6">
 
         <div className="lg:col-span-2">
           <TrendingCoins />
         </div>
 
-        <div>
-          <MarketSummary />
-        </div>
+        <MarketSummary />
+
+      </div>
+
+      {/* Second Row */}
+      <div className="grid md:grid-cols-2 gap-6">
+
+        <TopGainers />
+
+        <TopLosers />
 
       </div>
 
