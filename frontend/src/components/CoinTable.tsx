@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 type Coin = {
   id: string;
   name: string;
@@ -37,7 +39,13 @@ function CoinTable({ coins }: Props) {
                     alt={coin.name}
                     className="w-8 h-8"
                   />
-                  <span className="font-semibold">{coin.name}</span>
+
+                  <Link
+                    to={`/coin/${coin.id}`}
+                    className="font-semibold text-cyan-400 hover:text-cyan-300 hover:underline"
+                  >
+                    {coin.name}
+                  </Link>
                 </div>
               </td>
 
