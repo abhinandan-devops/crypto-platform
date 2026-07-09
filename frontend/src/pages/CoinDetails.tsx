@@ -1,21 +1,48 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCoinDetails } from "../services/coinService";
+import PriceChart from "../components/PriceChart";
 
 type Coin = {
   id: string;
   name: string;
   symbol: string;
+  market_cap_rank: number;
+
   image: {
     large: string;
   };
+
+  links: {
+    homepage: string[];
+  };
+
+  description: {
+    en: string;
+  };
+
   market_data: {
     current_price: {
       usd: number;
     };
+
     market_cap: {
       usd: number;
     };
+
+    high_24h: {
+      usd: number;
+    };
+
+    low_24h: {
+      usd: number;
+    };
+
+    price_change_percentage_24h: number;
+
+    circulating_supply: number;
+
+    total_supply: number | null;
   };
 };
 
@@ -48,9 +75,11 @@ function CoinDetails() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-6xl mx-auto">
+
       <div className="bg-slate-800 rounded-xl p-8">
-        <div className="flex items-center gap-6">
+
+        <div className="flex items-center gap-6 mb-10">
           <img
             src={coin.image.large}
             alt={coin.name}
@@ -68,13 +97,13 @@ function CoinDetails() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 mt-10">
+        <div className="grid md:grid-cols-2 gap-6">
+
           <div className="bg-slate-700 rounded-lg p-5">
             <p className="text-slate-400">Current Price</p>
 
             <h2 className="text-2xl font-bold mt-2">
-              $
-              {coin.market_data.current_price.usd.toLocaleString()}
+              ${coin.market_data.current_price.usd.toLocaleString()}
             </h2>
           </div>
 
@@ -82,12 +111,97 @@ function CoinDetails() {
             <p className="text-slate-400">Market Cap</p>
 
             <h2 className="text-2xl font-bold mt-2">
-              $
-              {coin.market_data.market_cap.usd.toLocaleString()}
+              ${coin.market_data.market_cap.usd.toLocaleString()}
             </h2>
           </div>
+
+          <div className="bg-slate-700 rounded-lg p-5">
+            <p className="text-slate-400">Rank</p>
+
+            <h2 className="text-2xl font-bold mt-2">
+              #{coin.market_cap_rank}
+            </h2>
+          </div>
+
+          <div className="bg-slate-700 rounded-lg p-5">
+            <p className="text-slate-400">24H Change</p>
+
+            <h2
+              className={`text-2xl font-bold mt-2 ${
+                coin.market_data.price_change_percentage_24h >= 0
+                  ? "text-green-400"
+                  : "text-red-400"
+              }`}
+            >
+              {coin.market_data.price_change_percentage_24h.toFixed(2)}%
+            </h2>
+          </div>
+
+          <div className="bg-slate-700 rounded-lg p-5">
+            <p className="text-slate-400">24H High</p>
+
+            <h2 className="text-2xl font-bold mt-2">
+              ${coin.market_data.high_24h.usd.toLocaleString()}
+            </h2>
+          </div>
+
+          <div className="bg-slate-700 rounded-lg p-5">
+            <p className="text-slate-400">24H Low</p>
+
+            <h2 className="text-2xl font-bold mt-2">
+              ${coin.market_data.low_24h.usd.toLocaleString()}
+            </h2>
+          </div>
+
+          <div className="bg-slate-700 rounded-lg p-5">
+            <p className="text-slate-400">Circulating Supply</p>
+
+            <h2 className="text-xl font-bold mt-2">
+              {coin.market_data.circulating_supply.toLocaleString()}
+            </h2>
+          </div>
+
+          <div className="bg-slate-700 rounded-lg p-5">
+            <p className="text-slate-400">Total Supply</p>
+
+            <h2 className="text-xl font-bold mt-2">
+              {coin.market_data.total_supply
+                ? coin.market_data.total_supply.toLocaleString()
+                : "N/A"}
+            </h2>
+          </div>
+
         </div>
+
+        <div className="bg-slate-700 rounded-lg p-6 mt-8">
+          <h2 className="text-2xl font-bold mb-4">
+            Description
+          </h2>
+
+          <div
+            className="text-slate-300 leading-7"
+            dangerouslySetInnerHTML={{
+              __html: coin.description.en.slice(0, 1200),
+            }}
+          />
+        </div>
+
+        <div className="mt-8">
+          <a
+            href={coin.links.homepage[0]}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg inline-block"
+          >
+            Visit Official Website
+          </a>
+        </div>
+        <div className="mt-8">
+         <PriceChart coinId={coin.id} />
+        </div>
+
       </div>
+
     </div>
   );
 }
