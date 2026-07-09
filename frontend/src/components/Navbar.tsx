@@ -1,27 +1,54 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { useFavorites } from "../context/FavoritesContext";
 
 function Navbar() {
+  const { favorites } = useFavorites();
+
   return (
     <nav className="bg-slate-800 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-5">
-        <h1 className="text-2xl font-bold text-cyan-400">
+        <Link
+          to="/"
+          className="text-2xl font-bold text-cyan-400"
+        >
           🚀 Crypto Platform
-        </h1>
+        </Link>
 
         <div className="flex gap-8 text-lg">
-          <Link
+
+          <NavLink
             to="/"
-            className="hover:text-cyan-400 transition"
+            className={({ isActive }) =>
+              isActive
+                ? "text-cyan-400 font-semibold"
+                : "hover:text-cyan-400 transition"
+            }
           >
             Dashboard
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             to="/markets"
-            className="hover:text-cyan-400 transition"
+            className={({ isActive }) =>
+              isActive
+                ? "text-cyan-400 font-semibold"
+                : "hover:text-cyan-400 transition"
+            }
           >
             Markets
-          </Link>
+          </NavLink>
+
+          <NavLink
+            to="/watchlist"
+            className={({ isActive }) =>
+              isActive
+                ? "text-cyan-400 font-semibold"
+                : "hover:text-cyan-400 transition"
+            }
+          >
+            ⭐ Watchlist ({favorites.length})
+          </NavLink>
+
         </div>
       </div>
     </nav>
