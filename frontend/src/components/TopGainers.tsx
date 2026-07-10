@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getMarketCoins } from "../services/dashboardService";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import Card from "./Card";
 
 type Coin = {
   id: string;
@@ -12,6 +15,7 @@ type Coin = {
 
 function TopGainers() {
   const [coins, setCoins] = useState<Coin[]>([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadCoins() {
@@ -29,14 +33,30 @@ function TopGainers() {
         setCoins(gainers);
       } catch (error) {
         console.error(error);
+        setError("Unable to load top gainers.");
       }
     }
 
     loadCoins();
   }, []);
 
+if (error) {
   return (
-    <div className="bg-slate-800 rounded-xl p-6">
+    <Card>
+      <ErrorMessage message={error} />
+    </Card>
+  );
+}
+  if (coins.length === 0) {
+  return (
+    <Card>
+      <Loader />
+    </Card>
+  );
+}
+
+  return (
+    <Card>
 
       <h2 className="text-2xl font-bold mb-6 text-green-400">
         📈 Top Gainers
@@ -79,7 +99,7 @@ function TopGainers() {
 
       </div>
 
-    </div>
+    </Card>
   );
 }
 

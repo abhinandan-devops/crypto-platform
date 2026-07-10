@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useFavorites } from "../context/FavoritesContext";
 import { getCoinsByIds } from "../services/coinService";
 import CoinTable from "../components/CoinTable";
+import Loader from "../components/Loader";
+import ErrorMessage from "../components/ErrorMessage";
+import Card from "../components/Card";
 
 type Coin = {
   id: string;
@@ -17,6 +20,7 @@ function Watchlist() {
 
   const [coins, setCoins] = useState<Coin[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadFavorites() {
@@ -30,6 +34,7 @@ function Watchlist() {
         setCoins(data);
       } catch (error) {
         console.error(error);
+        setError("Unable to load favorite coins.");
       } finally {
         setLoading(false);
       }
@@ -38,19 +43,29 @@ function Watchlist() {
     loadFavorites();
   }, [favorites]);
 
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">
-          ⭐ Watchlist
-        </h1>
+  if (error) {
+  return (
+    <div className="max-w-6xl mx-auto">
+      <Card>
+        <ErrorMessage message={error} />
+      </Card>
+    </div>
+  );
+}
 
-        <p className="text-slate-400">
-          Loading favorite coins...
-        </p>
-      </div>
-    );
-  }
+  if (loading) {
+  return (
+    <div className="max-w-6xl mx-auto">
+      <h1 className="text-4xl font-bold mb-8">
+        ⭐ Watchlist
+      </h1>
+
+      <Card>
+        <Loader />
+      </Card>
+    </div>
+  );
+}
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -60,11 +75,11 @@ function Watchlist() {
       </h1>
 
       {coins.length === 0 ? (
-        <div className="bg-slate-800 rounded-xl p-8">
-          <p className="text-slate-400 text-lg">
-            No favorite coins added yet.
-          </p>
-        </div>
+        <Card className="p-8">
+  <p className="text-slate-400 text-lg">
+    No favorite coins added yet.
+  </p>
+</Card>
       ) : (
         <CoinTable coins={coins} />
       )}

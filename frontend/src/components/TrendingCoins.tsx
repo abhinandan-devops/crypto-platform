@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTrendingCoins } from "../services/dashboardService";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import SkeletonCard from "./SkeletonCard";
+import Card from "./Card";
 
 type TrendingCoin = {
   item: {
@@ -15,6 +19,7 @@ type TrendingCoin = {
 
 function TrendingCoins() {
   const [coins, setCoins] = useState<TrendingCoin[]>([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadTrending() {
@@ -23,14 +28,42 @@ function TrendingCoins() {
         setCoins(data);
       } catch (error) {
         console.error(error);
+        setError("Unable to load trending coins.");
       }
     }
 
     loadTrending();
   }, []);
+if (error) {
+  return (
+    <Card>
+      <ErrorMessage message={error} />
+    </Card>
+  );
+}
+  
+  if (coins.length === 0) {
+  return (
+    <Card>
+
+      <h2 className="text-2xl font-bold mb-6">
+        🔥 Trending Coins
+      </h2>
+
+      <div className="grid md:grid-cols-2 gap-4">
+
+        {[1, 2, 3, 4].map((item) => (
+          <SkeletonCard key={item} />
+        ))}
+
+      </div>
+
+    </Card>
+  );
+}
 
   return (
-    <div className="bg-slate-800 rounded-xl p-6">
+    <Card>
       <h2 className="text-2xl font-bold mb-6">
         🔥 Trending Coins
       </h2>
@@ -81,7 +114,7 @@ function TrendingCoins() {
         ))}
 
       </div>
-    </div>
+    </Card>
   );
 }
 

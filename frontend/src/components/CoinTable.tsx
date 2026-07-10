@@ -1,14 +1,6 @@
 import { Link } from "react-router-dom";
 import { useFavorites } from "../context/FavoritesContext";
-
-type Coin = {
-  id: string;
-  name: string;
-  symbol: string;
-  current_price: number;
-  market_cap: number;
-  image: string;
-};
+import type { Coin } from "../types/coin";
 
 type Props = {
   coins: Coin[];

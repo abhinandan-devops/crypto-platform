@@ -2,54 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCoinDetails } from "../services/coinService";
 import PriceChart from "../components/PriceChart";
+import Loader from "../components/Loader";
+import ErrorMessage from "../components/ErrorMessage";
+import type { CoinDetails } from "../types/coin";
 
-type Coin = {
-  id: string;
-  name: string;
-  symbol: string;
-  market_cap_rank: number;
 
-  image: {
-    large: string;
-  };
-
-  links: {
-    homepage: string[];
-  };
-
-  description: {
-    en: string;
-  };
-
-  market_data: {
-    current_price: {
-      usd: number;
-    };
-
-    market_cap: {
-      usd: number;
-    };
-
-    high_24h: {
-      usd: number;
-    };
-
-    low_24h: {
-      usd: number;
-    };
-
-    price_change_percentage_24h: number;
-
-    circulating_supply: number;
-
-    total_supply: number | null;
-  };
-};
 
 function CoinDetails() {
   const { id } = useParams();
 
-  const [coin, setCoin] = useState<Coin | null>(null);
+  const [coin, setCoin] = useState<CoinDetails | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadCoin() {
@@ -59,21 +22,29 @@ function CoinDetails() {
         const data = await getCoinDetails(id);
         setCoin(data);
       } catch (error) {
-        console.error(error);
-      }
+  console.error(error);
+  setError("Unable to load coin details.");
+}
     }
 
     loadCoin();
   }, [id]);
 
-  if (!coin) {
-    return (
-      <div className="max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold">Loading...</h2>
-      </div>
-    );
-  }
+ if (error) {
+  return (
+    <div className="max-w-6xl mx-auto">
+      <ErrorMessage message={error} />
+    </div>
+  );
+}
 
+if (!coin) {
+  return (
+    <div className="max-w-5xl mx-auto">
+      <Loader />
+    </div>
+  );
+}
   return (
     <div className="max-w-6xl mx-auto">
 

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { getGlobalData } from "../services/dashboardService";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import Card from "./Card";
 
 type GlobalData = {
   active_cryptocurrencies: number;
@@ -18,6 +21,7 @@ type GlobalData = {
 
 function MarketSummary() {
   const [data, setData] = useState<GlobalData | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadData() {
@@ -25,23 +29,33 @@ function MarketSummary() {
         const result = await getGlobalData();
         setData(result);
       } catch (error) {
-        console.error(error);
-      }
+  console.error(error);
+  setError("Unable to load market summary.");
+}
     }
 
     loadData();
   }, []);
-
+if (error) {
+  return (
+    <Card>
+      <ErrorMessage message={error} />
+    </Card>
+    
+  );
+}
   if (!data) {
-    return (
-      <div className="bg-slate-800 rounded-xl p-6">
-        Loading Market Summary...
-      </div>
-    );
-  }
+  return (
+    <Card>
+      <Loader />
+    </Card>
+      
+    
+  );
+}
 
   return (
-    <div className="bg-slate-800 rounded-xl p-6">
+    <Card>
 
       <h2 className="text-2xl font-bold mb-6">
         🌍 Global Market
@@ -105,7 +119,7 @@ function MarketSummary() {
 
       </div>
 
-    </div>
+    </Card>
   );
 }
 
