@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-
+import Compare from "./pages/Compare";
 import MainLayout from "./layouts/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Markets from "./pages/Markets";
@@ -14,6 +14,7 @@ function App() {
         <Route path="/markets" element={<Markets />} />
         <Route path="/coin/:id" element={<CoinDetails />} />
         <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/compare" element={<Compare />} />
       </Routes>
     </MainLayout>
   );

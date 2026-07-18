@@ -1,5 +1,5 @@
 import { fetchCoins } from "./api";
 
-export async function getMarketData() {
-  return await fetchCoins();
+export async function getMarketData(currency = "usd") {
+  return await fetchCoins(currency);
 }

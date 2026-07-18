@@ -5,15 +5,7 @@ import CoinTable from "../components/CoinTable";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import Card from "../components/Card";
-
-type Coin = {
-  id: string;
-  name: string;
-  symbol: string;
-  current_price: number;
-  market_cap: number;
-  image: string;
-};
+import type { Coin } from "../types/coin";
 
 function Watchlist() {
   const { favorites } = useFavorites();
@@ -24,6 +16,9 @@ function Watchlist() {
 
   useEffect(() => {
     async function loadFavorites() {
+      setLoading(true);
+      setError("");
+
       try {
         if (favorites.length === 0) {
           setCoins([]);
@@ -44,45 +39,63 @@ function Watchlist() {
   }, [favorites]);
 
   if (error) {
-  return (
-    <div className="max-w-6xl mx-auto">
-      <Card>
-        <ErrorMessage message={error} />
-      </Card>
-    </div>
-  );
-}
+    return (
+      <div className="max-w-6xl mx-auto">
+        <Card>
+          <ErrorMessage message={error} />
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">
+          ⭐ Watchlist
+        </h1>
+
+        <Card>
+          <Loader />
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8">
-        ⭐ Watchlist
-      </h1>
 
-      <Card>
-        <Loader />
-      </Card>
-    </div>
-  );
-}
+      {/* Page Header */}
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold">
+          ⭐ Watchlist
+        </h1>
 
-  return (
-    <div className="max-w-6xl mx-auto">
+        <p className="text-slate-400 mt-2 text-sm sm:text-base">
+          Track your favorite cryptocurrencies in one place.
+        </p>
+      </div>
 
-      <h1 className="text-4xl font-bold mb-8">
-        ⭐ Watchlist
-      </h1>
-
+      {/* Empty State */}
       {coins.length === 0 ? (
-        <Card className="p-8">
-  <p className="text-slate-400 text-lg">
-    No favorite coins added yet.
-  </p>
-</Card>
-      ) : (
-        <CoinTable coins={coins} />
-      )}
+  <Card className="p-6 sm:p-10">
+    <div className="text-center">
+      <div className="text-5xl mb-4">
+        ⭐
+      </div>
+
+      <h2 className="text-xl sm:text-2xl font-bold">
+        Your watchlist is empty
+      </h2>
+
+      <p className="text-slate-400 mt-2 text-sm sm:text-base">
+        Add your favorite cryptocurrencies from the Markets page.
+      </p>
+    </div>
+  </Card>
+) : (
+  <CoinTable coins={coins} />
+)}
 
     </div>
   );

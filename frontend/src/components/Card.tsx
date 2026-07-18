@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
@@ -8,7 +8,7 @@ type Props = {
 function Card({ children, className = "" }: Props) {
   return (
     <div
-      className={`bg-slate-800 rounded-xl p-6 shadow-lg ${className}`}
+      className={`bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-lg ${className}`}
     >
       {children}
     </div>

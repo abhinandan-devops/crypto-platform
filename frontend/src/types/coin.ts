@@ -5,6 +5,8 @@ export type Coin = {
   current_price: number;
   market_cap: number;
   image: string;
+  market_cap_rank: number;
+price_change_percentage_24h: number;
 };
 
 export type CoinDetails = {
@@ -43,6 +45,7 @@ export type CoinDetails = {
     };
 
     price_change_percentage_24h: number;
+    
 
     circulating_supply: number;
 

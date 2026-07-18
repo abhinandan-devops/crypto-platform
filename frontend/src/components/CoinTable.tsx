@@ -4,21 +4,33 @@ import type { Coin } from "../types/coin";
 
 type Props = {
   coins: Coin[];
+  currency?: string;
 };
 
-function CoinTable({ coins }: Props) {
+ function CoinTable({
+  coins,
+  currency = "usd",
+}: Props) {
   const { favorites, toggleFavorite } = useFavorites();
+  const currencySymbols: Record<string, string> = {
+  usd: "$",
+  inr: "₹",
+  eur: "€",
+};
+
+const currencySymbol =
+  currencySymbols[currency] ?? "$";
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-700">
-      <table className="w-full bg-slate-800 rounded-xl overflow-hidden">
+    <div className="w-full overflow-x-auto rounded-xl border border-slate-700">
+      <table className="w-full min-w-[750px] bg-slate-800">
         <thead className="bg-slate-700">
           <tr>
-            <th className="p-4 text-left">Fav</th>
-            <th className="p-4 text-left">Coin</th>
-            <th className="p-4 text-left">Symbol</th>
-            <th className="p-4 text-left">Price</th>
-            <th className="p-4 text-left">Market Cap</th>
+            <th className="p-3 sm:p-4 text-left">Fav</th>
+            <th className="p-3 sm:p-4 text-left">Coin</th>
+            <th className="p-3 sm:p-4 text-left">Symbol</th>
+            <th className="p-3 sm:p-4 text-left">Price</th>
+            <th className="p-3 sm:p-4 text-left">Market Cap</th>
           </tr>
         </thead>
 
@@ -28,42 +40,55 @@ function CoinTable({ coins }: Props) {
               key={coin.id}
               className="border-b border-slate-700 hover:bg-slate-700 transition"
             >
-              <td className="p-4">
+              {/* Favorite */}
+              <td className="p-3 sm:p-4">
                 <button
+                  type="button"
                   onClick={() => toggleFavorite(coin.id)}
-                  className="text-2xl"
+                  className="text-2xl hover:scale-110 transition-transform"
+                  aria-label={
+                    favorites.includes(coin.id)
+                      ? `Remove ${coin.name} from favorites`
+                      : `Add ${coin.name} to favorites`
+                  }
                 >
                   {favorites.includes(coin.id) ? "⭐" : "☆"}
                 </button>
               </td>
 
-              <td className="p-4">
+              {/* Coin */}
+              <td className="p-3 sm:p-4">
                 <div className="flex items-center gap-3">
                   <img
                     src={coin.image}
                     alt={coin.name}
-                    className="w-8 h-8"
+                    className="w-8 h-8 shrink-0"
                   />
 
                   <Link
                     to={`/coin/${coin.id}`}
-                    className="font-semibold text-cyan-400 hover:text-cyan-300 hover:underline"
+                    className="font-semibold text-cyan-400 hover:text-cyan-300 hover:underline whitespace-nowrap"
                   >
                     {coin.name}
                   </Link>
                 </div>
               </td>
 
-              <td className="p-4 uppercase">
+              {/* Symbol */}
+              <td className="p-3 sm:p-4 uppercase whitespace-nowrap">
                 {coin.symbol}
               </td>
 
-              <td className="p-4">
-                ${coin.current_price.toLocaleString()}
+              {/* Price */}
+              <td className="p-3 sm:p-4 whitespace-nowrap">
+                {currencySymbol}
+                {coin.current_price.toLocaleString()}
               </td>
 
-              <td className="p-4">
-                ${coin.market_cap.toLocaleString()}
+              {/* Market Cap */}
+              <td className="p-3 sm:p-4 whitespace-nowrap">
+                {currencySymbol}
+                {coin.market_cap.toLocaleString()}
               </td>
             </tr>
           ))}

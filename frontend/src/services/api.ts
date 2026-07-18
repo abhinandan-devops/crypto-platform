@@ -1,8 +1,8 @@
 const BASE_URL = "https://api.coingecko.com/api/v3";
 
-export async function fetchCoins() {
+export async function fetchCoins(currency = "usd") {
   const response = await fetch(
-    `${BASE_URL}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1`
+    `${BASE_URL}/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=250&page=1`
   );
 
   if (!response.ok) {

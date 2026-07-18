@@ -1,53 +1,41 @@
-import { useEffect, useState } from "react";
-import { getGlobalData } from "../services/dashboardService";
+import { useGlobalData } from "../hooks/useGlobalData";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
 import Card from "./Card";
+import {
+  formatCurrency,
+  formatNumber,
+  formatPercentage,
+} from "../utils/formatters";
 
-type GlobalData = {
-  active_cryptocurrencies: number;
-  markets: number;
-  total_market_cap: {
-    usd: number;
-  };
-  total_volume: {
-    usd: number;
-  };
-  market_cap_percentage: {
-    btc: number;
-    eth: number;
-  };
-};
 
 function MarketSummary() {
-  const [data, setData] = useState<GlobalData | null>(null);
-  const [error, setError] = useState("");
+  const {
+  data,
+  isLoading,
+  error,
+} = useGlobalData();
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const result = await getGlobalData();
-        setData(result);
-      } catch (error) {
-  console.error(error);
-  setError("Unable to load market summary.");
-}
-    }
-
-    loadData();
-  }, []);
+  
 if (error) {
   return (
     <Card>
-      <ErrorMessage message={error} />
+      <ErrorMessage message="Unable to load market summary." />
     </Card>
     
   );
 }
-  if (!data) {
+  if (isLoading) {
   return (
     <Card>
-      <Loader />
+      <Card>
+  <div className="space-y-4">
+    <Loader />
+    <p className="text-center text-slate-400">
+      Loading global market statistics...
+    </p>
+  </div>
+</Card>
     </Card>
       
     
@@ -63,58 +51,84 @@ if (error) {
 
       <div className="space-y-4">
 
-        <div className="bg-slate-700 rounded-lg p-4">
-          <p className="text-slate-400">
-            Active Coins
-          </p>
+        <div className="bg-slate-700 rounded-xl p-4 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300">
+          <div className="flex items-center justify-between">
+  <div>
+    <p className="text-slate-400">
+      Active Coins
+    </p>
 
-          <h3 className="text-2xl font-bold">
-            {data.active_cryptocurrencies.toLocaleString()}
-          </h3>
+    <h3 className="text-2xl font-bold">
+      {formatNumber(data.active_cryptocurrencies)}
+    </h3>
+  </div>
+
+  <span className="text-3xl">🪙</span>
+</div>
         </div>
 
-        <div className="bg-slate-700 rounded-lg p-4">
-          <p className="text-slate-400">
-            Exchanges
-          </p>
+        <div className="bg-slate-700 rounded-xl p-4 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300">
+          <div className="flex items-center justify-between">
+  <div>
+    <p className="text-slate-400">
+      Exchanges
+    </p>
 
-          <h3 className="text-2xl font-bold">
-            {data.markets.toLocaleString()}
-          </h3>
+    <h3 className="text-2xl font-bold">
+      {formatNumber(data.markets)}
+    </h3>
+  </div>
+
+  <span className="text-3xl">🏦</span>
+</div>
         </div>
 
-        <div className="bg-slate-700 rounded-lg p-4">
-          <p className="text-slate-400">
-            Total Market Cap
-          </p>
+        <div className="bg-slate-700 rounded-xl p-4 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300">
+          <div className="flex items-center justify-between">
+  <div>
+    <p className="text-slate-400">
+      Total Market Cap
+    </p>
 
-          <h3 className="text-xl font-bold">
-            $
-            {(data.total_market_cap.usd / 1_000_000_000_000).toFixed(2)}
-            T
-          </h3>
+    <h3 className="text-xl font-bold">
+     {formatCurrency(data.total_market_cap.usd)}
+    </h3>
+  </div>
+
+  <span className="text-3xl">🌍</span>
+</div>
         </div>
 
-        <div className="bg-slate-700 rounded-lg p-4">
-          <p className="text-slate-400">
-            24H Volume
-          </p>
+        <div className="bg-slate-700 rounded-xl p-4 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300">
+          <div className="flex items-center justify-between">
+  <div>
+    <p className="text-slate-400">
+      24H Volume
+    </p>
 
-          <h3 className="text-xl font-bold">
-            $
-            {(data.total_volume.usd / 1_000_000_000).toFixed(2)}
-            B
-          </h3>
+    <h3 className="text-xl font-bold">
+      {formatCurrency(data.total_volume.usd)}
+    </h3>
+  </div>
+
+  <span className="text-3xl">📈</span>
+</div>
         </div>
 
-        <div className="bg-slate-700 rounded-lg p-4">
-          <p className="text-slate-400">
-            BTC Dominance
-          </p>
+        <div className="bg-slate-700 rounded-xl p-4 hover:bg-slate-600 hover:scale-[1.02] transition-all duration-300">
+          <div className="flex items-center justify-between">
+  <div>
+    <p className="text-slate-400">
+      BTC Dominance
+    </p>
 
-          <h3 className="text-xl font-bold text-yellow-400">
-            {data.market_cap_percentage.btc.toFixed(2)}%
-          </h3>
+    <h3 className="text-xl font-bold text-yellow-400">
+      {formatPercentage(data.market_cap_percentage.btc)}
+    </h3>
+  </div>
+
+  <span className="text-3xl">₿</span>
+</div>
         </div>
 
       </div>
